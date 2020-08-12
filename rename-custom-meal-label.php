@@ -92,8 +92,11 @@ function rcml_rename_mcf_meta( $old, $new ) {
 		$meta_id  = $meta['meta_id'];
 		$mcf_data = maybe_unserialize( $meta['meta_value'] );
 
-		$mcf_data[0]['option']['title'] = $new;
-		$mcf_data[0]['option']['slug']  = sanitize_title_with_dashes( $new );
+		if ( array_key_exists( 0, $mcf_data ) && 'Protein' === $mcf_data[0]['title'] ) {
+			$mcf_data[0]['option']['title'] = $new;
+		} elseif ( array_key_exists( 'protein', $mcf_data ) ) {
+			$mcf_data['protein']['option']['title'] = $new;
+		}
 
 		$updated = $wpdb->update( $table, array( 'meta_value' => serialize( $mcf_data ) ), array( 'meta_id' => $meta_id ) );
 
